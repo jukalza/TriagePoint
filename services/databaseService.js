@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const useSsl = process.env.DB_HOST === "cloud.layerbase.dev";
+
 const database = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -10,8 +12,7 @@ const database = mysql.createPool({
     database: process.env.DB_NAME,
     port: Number(process.env.DB_PORT),
 
-    ssl: 
-        process.env.NODE_ENV === "production" 
+    ssl: useSsl
         ? {
             rejectUnauthorized: true
         }
