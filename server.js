@@ -40,5 +40,7 @@ app.use((req, res) => {
 
 // start server
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log("Server running on port " + PORT);
 });
+
+export default app;
