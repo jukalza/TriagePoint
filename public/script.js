@@ -17,6 +17,10 @@ document.getElementById("nextPageButton").addEventListener("click", function() {
 
 async function loadVulnerabilities() {
     
+    const loader = document.getElementById("vulnerabilityLoader");
+
+    loader.classList.remove("hidden");
+
     try {
 
         const search = document.getElementById("searchInput").value;
@@ -26,9 +30,7 @@ async function loadVulnerabilities() {
         const kev = document.getElementById("kevFilter").value;
         const priority = document.getElementById("priorityFilter").value;
         const sort = document.getElementById("sortFilter").value;
-        const loader = document.getElementById("vulnerabilityLoader");
 
-        loader.classList.remove("hidden");
 
         const params = new URLSearchParams();
 
@@ -92,7 +94,7 @@ async function loadVulnerabilities() {
         params.append("limit", 25);
 
         const response = await fetch(
-            "api/nvd/database/all?" + params.toString()
+            "/api/nvd/database/all?" + params.toString()
         );
 
         const data = await response.json();
