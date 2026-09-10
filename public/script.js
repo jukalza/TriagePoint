@@ -26,6 +26,9 @@ async function loadVulnerabilities() {
         const kev = document.getElementById("kevFilter").value;
         const priority = document.getElementById("priorityFilter").value;
         const sort = document.getElementById("sortFilter").value;
+        const loader = document.getElementById("vulnerabilityLoader");
+
+        loader.classList.remove("hidden");
 
         const params = new URLSearchParams();
 
@@ -109,6 +112,8 @@ async function loadVulnerabilities() {
         console.log("Error loading vulnerabilities");
         console.log(error);
 
+    } finally {
+        loader.classList.add("hidden");
     }
 
 }
