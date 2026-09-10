@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TriagePoint</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <header class="topbar">
+            <div class="logo">
+                <img
+                    src="TriagePoint-logo2.png"
+                    alt="logo"
+                    class="triagepoint-logo"
+                >
+                <h1>TriagePoint</h1>
+            </div>
+        </header>
+
+
+        <main>
+
+            <section class="dashboard-header">
+
+                <div>
+                    <h2>Vulnerability Dashboard</h2>
+                </div>
+
+                <div class="sync-section">
+                    <button id="syncButton">
+                        Sync Vulnerability Data
+                    </button>
+
+                    <div class="sync-status-group">
+                        <div id="syncLoader" class="sync-loader hidden"></div>
+
+                        <span id="syncStatus"></span>
+                    </div>
+                    
+                </div>
+
+            </section>
+
+            <section class="summary-cards">
+
+                <div class="summary-card total-summary">
+                    <span class="summary-label">Total Vulnerabilities</span>
+                    <span class="summary-value" id="totalCount">0</span>
+                </div>
+
+                <div class="summary-card critical-summary">
+                    <span class="summary-label">Critical</span>
+                    <span class="summary-value" id="criticalCount">0</span>
+                </div>
+
+                <div class="summary-card high-summary">
+                    <span class="summary-label">High</span>
+                    <span class="summary-value" id="highCount">0</span>
+                </div>
+
+                <div class="summary-card kev-summary">
+                    <span class="summary-label">Known Exploited</span>
+                    <span class="summary-value" id="kevCount">0</span>
+                </div>
+
+                <div class="summary-card epss-summary">
+                    <span class="summary-label">High EPSS</span>
+                    <span class="summary-value" id="highEpssCount">0</span>
+                </div>
+            </section>
+
+            <section class="filters-card">
+
+                <div class="filter-search">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search CVE or description"
+                    >
+
+                </div>
+
+                <div class="filter-group">
+
+                    <select id="severityFilter">
+                        <option value="">All severities</option>
+                        <option value="CRITICAL">Critical</option>
+                        <option value="HIGH">High</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="LOW">Low</option>
+                    </select>
+
+                    <input
+                        type="number"
+                        id="minScoreInput"
+                        placeholder="Min CVSS"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                    >
+
+                    <input
+                        type="number"
+                        id="minEpssInput"
+                        placeholder="Minimum EPSS %"
+                        min="0"
+                        max="100"
+                        step="1"
+                    >
+
+                    <select id="kevFilter">
+                        <option value="">All KEV statuses</option>
+                        <option value="true">KEV only</option>
+                    </select>
+
+                    <select id="priorityFilter">
+                        <option value="">All priorities</option>
+                        <option value="CRITICAL">Critical</option>
+                        <option value="HIGH">High</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="LOW">Low</option>
+                    </select>
+
+                    <button id="filterButton">
+                        Apply Filters
+                    </button>
+                </div>
+
+                <div class="sort-group">
+                    <label for="sortFilter">Sort by</label>
+
+                    <select id="sortFilter">
+                        <option value="published">Published Date</option>
+                        <option value="priority">Priority Score</option>
+                        <option value="cvss">CVSS Score</option>
+                        <option value="epss">EPSS Score</option>
+                    </select>
+                </div>
+            </section>
+
+
+            <section class="content-grid">
+
+                <div class="table-card">
+
+                    <div class="section-heading">
+                        <h2>Vulnerabilities</h2>
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>CVE</th>
+                                    <th>Severity</th>
+                                    <th>CVSS</th>
+                                    <th>EPSS</th>
+                                    <th>KEV</th>
+                                    <th>Priority Score</th>
+                                    <th>Priority Level</th>
+                                    <th>Published</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="vulnerabilityTable">
+                            </tbody>
+
+                        </table>
+
+                        <div class="pagination-controls">
+                            <button id="previousPageButton">Previous</button>
+
+                            <span id="pageInfo">Page 1</span>
+
+                            <button id="nextPageButton">Next</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <aside class="details-card">
+
+                    <h3>Vulnerability Details</h3>
+
+                    <div id="vulnerabilityDetails" class="details-content">
+
+                        <p class="empty-state">
+                            Select a vulnerability to view more information.
+                        </p>
+
+                    </div>
+
+                </aside>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
