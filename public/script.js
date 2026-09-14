@@ -1,3 +1,5 @@
+import { resolve } from "dns";
+
 let currentPage = 1;
 let totalPages = 1;
 
@@ -14,6 +16,46 @@ document.getElementById("nextPageButton").addEventListener("click", function() {
         loadVulnerabilities();
     }
 });
+
+async function fetchWithRetry(url, options = {}, retries = 5, delay = 4000) {
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+
+        try {
+            
+            const response = await fetch(url, options);
+
+            if (response.ok) {
+                return response;
+            }
+
+            console.log(
+                `Request failed (${response.status}). Attempt ${attempt} of ${retries}`
+            );
+
+        } catch (error) {
+
+            console.log(
+                `Request error. Attempt ${attempt} of ${retries}`,
+                error
+            );
+
+        }
+
+        if (attempt < retries) {
+
+            await new Promise(resolve =>
+                setTimeout(resolve, delay)
+            );
+        }
+
+    }
+
+    throw new Error(
+        "The server could not be reached after several attempts."
+    );
+
+}
 
 async function loadVulnerabilities() {
     
@@ -93,11 +135,17 @@ async function loadVulnerabilities() {
         params.append("page", currentPage);
         params.append("limit", 25);
 
-        const response = await fetch(
+        const response = await fetchWithRetry(
             "/api/nvd/database/all?" + params.toString()
         );
 
         const data = await response.json();
+
+        if (!Array.isArray(data.vulnerabilities)) {
+            throw new Error(
+                "Invalid vulnerability response received."
+            );
+        }
 
         displayVulnerabilities(data.vulnerabilities);
 
@@ -369,7 +417,7 @@ async function loadSummary() {
 
     try {
 
-        const response = await fetch (
+        const response = await fetchWithRetry(
             "/api/nvd/database/summary"
         );
 
