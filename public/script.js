@@ -1,5 +1,3 @@
-import { resolve } from "dns";
-
 let currentPage = 1;
 let totalPages = 1;
 
