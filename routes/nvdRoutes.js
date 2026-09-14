@@ -14,7 +14,8 @@ import {
     getCveIdsWithoutKev,
     improveVulnerability,
     syncVulnerabilityData,
-    recalculateAllPriorities
+    recalculateAllPriorities,
+    recalculatePriorityForCve
 } from "../services/vulnerabilityService.js";
 import { fetchEpssForCve, fetchEpssForMultipleCves} from "../services/epssService.js";
 import { transformEpssResponse, transformMultipleEpssResponses } from "../services/epssTransformer.js";
@@ -150,6 +151,16 @@ router.get("/search/:cveId", async function(req,res) {
 
         //if found return it
         if (vulnerability) {
+
+            if (
+                vulnerability.priority_score == null &&
+                vulnerability.cvss_score != null &&
+                vulnerability.epss_score != null
+            ) {
+                await recalculatePriorityForCve(cveId);
+
+                vulnerability = await getVulnerabilityByCveId(cveId);
+            }
             return res.json({
                 source: "database",
                 vulnerability: vulnerability
@@ -179,10 +190,10 @@ router.get("/search/:cveId", async function(req,res) {
             vulnerability: savedVulnerability
         });
 
-    } catch {
+    } catch (error) {
         res.status(500).json({
             error: error.message
-        })
+        });
     }
 });
 
