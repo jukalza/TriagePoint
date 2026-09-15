@@ -76,6 +76,14 @@ async function loadVulnerabilities() {
 
         // if the user enters something that looks like a CVE ID
         if (search.toUpperCase().startsWith("CVE-")) {
+
+            const cvePattern = /^CVE-\d{4}-\d{4,}$/i;
+            
+            if (!cvePattern.test(search)) {
+                alert("Please enter a valid CVE ID");
+                return;
+            }
+
             const response = await fetch(
                 "/api/nvd/search/" + search
             );
@@ -83,7 +91,13 @@ async function loadVulnerabilities() {
             const result = await response.json();
 
             if (!response.ok) {
-                alert(result.error || "CVE not found");
+                
+                if (response.status === 404) {
+                    alert("CVE not found. Please check CVE ID and try again.");
+                } else {
+                    alert("Unable to retrieve the CVE at the moment. Please try again.")
+                }
+
                 return;
             }
 
