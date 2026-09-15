@@ -443,7 +443,7 @@ router.post("/priority/recalculate", async function(req, res) {
 
 });
 
-router.get("database/recalculate-missing-priorities", async function(req, res) {
+router.get("/database/recalculate-missing-priorities", async function(req, res) {
     
     try {
 
