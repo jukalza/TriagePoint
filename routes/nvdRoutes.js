@@ -16,8 +16,7 @@ import {
     syncVulnerabilityData,
     recalculateAllPriorities,
     recalculatePriorityForCve,
-    calculatePriority,
-    updateVulnerabilityPriority
+    recalculateMissingPriorities
 } from "../services/vulnerabilityService.js";
 import { fetchEpssForCve, fetchEpssForMultipleCves} from "../services/epssService.js";
 import { transformEpssResponse, transformMultipleEpssResponses } from "../services/epssTransformer.js";
@@ -444,58 +443,25 @@ router.post("/priority/recalculate", async function(req, res) {
 
 });
 
-router.get("/debug/priority/:cveId", async function(req, res) {
+router.post("database/recalculate-missing-priorities", async function(req, res) {
+    
     try {
 
-        const cveId = req.params.cveId.toUpperCase();
-
-        const before =
-            await getVulnerabilityByCveId(cveId);
-
-        if (!before) {
-            return res.status(404).json({
-                error: "CVE not found in database"
-            });
-        }
-
-        const priority = calculatePriority(
-            before.cvss_score,
-            before.epss_score,
-            before.is_kev
-        );
-
-        if (priority) {
-            await updateVulnerabilityPriority(
-                cveId,
-                priority
-            );
-        }
-
-        const after =
-            await getVulnerabilityByCveId(cveId);
+        const updated = await recalculateMissingPriorities();
 
         return res.json({
-            before: {
-                cvss: before.cvss_score,
-                epss: before.epss_score,
-                kev: before.is_kev,
-                priorityScore: before.priority_score,
-                priorityLevel: before.priority_level
-            },
-
-            calculated: priority,
-
-            after: {
-                priorityScore: after.priority_score,
-                priorityLevel: after.priority_level
-            }
+            message: "Missing priorities recalculated",
+            updated: updated
         });
 
     } catch (error) {
+        
         return res.status(500).json({
             error: error.message
         });
+
     }
+
 });
 
 router.get("/:cveId", async (req,res) => {
