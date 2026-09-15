@@ -95,6 +95,9 @@ async function loadVulnerabilities() {
                 result.vulnerability
             );
 
+            //no pagination for a single CVE result
+            document.querySelector(".pagination-controls").style.display = "none";
+
             return;
         }
 
@@ -146,6 +149,9 @@ async function loadVulnerabilities() {
         }
 
         displayVulnerabilities(data.vulnerabilities);
+
+        // show pagination for normal results
+        document.querySelector(".pagination-controls").style.display = "flex";
 
         totalPages = data.totalPages;
 
