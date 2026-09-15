@@ -15,8 +15,7 @@ import {
     improveVulnerability,
     syncVulnerabilityData,
     recalculateAllPriorities,
-    recalculatePriorityForCve,
-    recalculateMissingPriorities
+    recalculatePriorityForCve
 } from "../services/vulnerabilityService.js";
 import { fetchEpssForCve, fetchEpssForMultipleCves} from "../services/epssService.js";
 import { transformEpssResponse, transformMultipleEpssResponses } from "../services/epssTransformer.js";
@@ -443,26 +442,6 @@ router.post("/priority/recalculate", async function(req, res) {
 
 });
 
-router.get("/database/recalculate-missing-priorities", async function(req, res) {
-    
-    try {
-
-        const updated = await recalculateMissingPriorities();
-
-        return res.json({
-            message: "Missing priorities recalculated",
-            updated: updated
-        });
-
-    } catch (error) {
-        
-        return res.status(500).json({
-            error: error.message
-        });
-
-    }
-
-});
 
 router.get("/:cveId", async (req,res) => {
     try {
